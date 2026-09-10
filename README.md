@@ -2,6 +2,7 @@
 
 <div align="center">
 
+![CDAC Mumbai](https://img.shields.io/badge/CDAC_Mumbai-Live_Project-FF9933?style=for-the-badge&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)
@@ -13,6 +14,9 @@
 
 <p align="center">
   <strong>An Enterprise-Grade, Air-Gapped Hybrid RAG, Knowledge Graph & Deterministic Governance Platform for Major Port Authorities</strong>
+</p>
+<p align="center">
+  <em>A Live Enterprise Project developed at CDAC Mumbai (Centre for Development of Advanced Computing)</em>
 </p>
 
 </div>
@@ -26,6 +30,9 @@ Major Port Authorities administer thousands of hectares of prime maritime real e
 - **Tariff Authority for Major Ports (TAMP TR 138/2009 & TAMP 2019)**
 - **Major Port Authorities Act, 2021**
 - **Indian Contract Act, 1872 & Ready Reckoner (RR) / Schedule of Rates (SOR)**
+
+### Project Origin & Attribution
+This platform was engineered as a **CDAC Mumbai Live Capstone Project** for Major Port Authorities. It addresses operational bottlenecks in statutory port estate governance, multi-decade lease agreements, and billing audits under Indian maritime land-use regulations.
 
 ### The Operational Challenges
 1. **Multi-Decade Tenancy Complexity**: Leases extending across 30 to 99 years accumulate dozens of amendments, subletting approvals, mortgage permissions, and renewal riders, creating fragmented institutional memory.
@@ -273,12 +280,17 @@ Once booted, access the application via your browser:
 
 ## VIII. Data Privacy, Air-Gap Compliance & Disclaimer
 
+### Data Confidentiality & Responsible Disclosure
+- **Government & Port Authority Data Privacy**: In compliance with statutory confidentiality, non-disclosure protocols, and data protection norms, all authentic port operational databases (`*.db`, `*.sqlite`), live tenant PII (PAN/GST numbers, real ledger figures), tender financial cash flows, and internal Port Authority Board Notes / LAC minutes have been deliberately excluded from this version-controlled repository via strict `.gitignore` controls.
+- **Complete Functional Integrity**: The codebase published here is the complete, unmodified application and algorithm suite (FastAPI services, React frontend, hybrid RAG pipeline, deterministic guardrails, LangGraph workflows, and pure-Python ML tree evaluator).
+- **Local Offline Evaluation**: The complete end-to-end system—including local Ollama LLM execution, vector databases, and seeded fallback schemas—operates 100% air-gapped on-premise. It is maintained intact on local development environments for live examiner verification and technical viva defense demonstrations.
+
+### Air-Gap Architecture & Legal Scope
 - **Zero Cloud Data Egress**: All embeddings, graph relations, database lookups, and LLM inferences execute strictly on `127.0.0.1` edge infrastructure.
-- **Confidentiality by Design**: Operational port databases, proprietary board notes, internal lease agreements, and tenant PII are enforced as local-only artifacts shielded by `.gitignore`.
 - **GovTech Disclaimer**: AI-PMS is designed as an executive decision support and regulatory copilot. All land lease allotments, subletting permissions, and tariff assessments remain subject to formal statutory sign-off by designated Port Authority officers under the Major Port Authorities Act, 2021.
 
 ---
 
 <div align="center">
-  <sub>Developed for Modern Maritime Infrastructure Administration & Port Land Lease Modernization.</sub>
+  <sub>Developed at CDAC Mumbai (Centre for Development of Advanced Computing) for Modern Maritime Infrastructure Administration & Port Land Lease Modernization.</sub>
 </div>
