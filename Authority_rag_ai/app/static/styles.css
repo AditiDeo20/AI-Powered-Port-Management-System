@@ -1,0 +1,125 @@
+/* Custom CSS Design System for Port Land Lease MMS */
+
+:root {
+  --navy: #0B2545;
+  --navy-light: #134074;
+  --navy-dark: #001229;
+  --navy-muted: #8DA9C4;
+  --navy-foreground: #FFFFFF;
+
+  --surface: #F4F7FA;
+  --card: #FFFFFF;
+  --border: #E2E8F0;
+  
+  --foreground: #1E293B;
+  --muted-foreground: #64748B;
+  --secondary: #EEF4F8;
+  
+  --gold: #D97706;
+  --gold-light: #FBBF24;
+  
+  --gov-green: #059669;
+  --gov-green-light: #10B981;
+}
+
+body {
+  background-color: var(--surface);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.font-display {
+  font-family: 'Outfit', 'Inter', sans-serif;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Sidebar Responsiveness handling */
+#sidebar-container {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 1023px) {
+  #sidebar-container {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 50;
+    transform: translateX(-100%);
+  }
+  #sidebar-container.open {
+    transform: translateX(0);
+  }
+}
+
+@media (min-width: 1024px) {
+  #sidebar-container {
+    position: static;
+    transform: none !important;
+    height: auto;
+  }
+}
+
+/* Color utility classes */
+.bg-navy { background-color: var(--navy); }
+.bg-navy-light { background-color: var(--navy-light); }
+.text-navy { color: var(--navy); }
+.text-navy-dark { color: var(--navy-dark); }
+.text-navy-muted { color: var(--navy-muted); }
+.text-navy-foreground { color: var(--navy-foreground); }
+.border-navy-light { border-color: var(--navy-light); }
+
+.bg-surface { background-color: var(--surface); }
+.bg-secondary { background-color: var(--secondary); }
+.text-muted-foreground { color: var(--muted-foreground); }
+
+.text-gold { color: var(--gold); }
+.text-gold-light { color: var(--gold-light); }
+.bg-gold\/20 { background-color: rgba(217, 119, 6, 0.2); }
+.border-gold\/40 { border-color: rgba(217, 119, 6, 0.4); }
+
+.text-gov-green { color: var(--gov-green); }
+.bg-gov-green { background-color: var(--gov-green); }
+.bg-gov-green\/5 { background-color: rgba(5, 150, 105, 0.05); }
+.border-gov-green\/30 { border-color: rgba(5, 150, 105, 0.3); }
+
+/* Card Government style */
+.card-gov {
+  background-color: var(--card);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+}
+
+.shadow-card {
+  box-shadow: 0 2px 4px rgba(11, 37, 69, 0.06);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Interactive elements */
+button, select, input {
+  transition: all 0.15s ease-in-out;
+}

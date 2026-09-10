@@ -1,0 +1,69 @@
+﻿# ==========================================
+# CONFIDENTIAL PORT DATA & DATABASES (LOCAL ONLY)
+# ==========================================
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+*.dump
+*.bak
+pms_app_fallback.db
+pms_vector_fallback.db
+chat_sessions.json
+
+# Confidential Port Authority Internal Board Notes & Tender RFPs
+backend/workflows/data/*.json
+backend/workflows/data/*.docx
+backend/workflows/data/*.pdf
+backend/workflows/data/*.md
+backend/workflows/data2/
+!backend/workflows/data/README.md
+!backend/workflows/data/billing_model_manifest.json
+
+# Environment variables & secrets
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.cert
+
+# ==========================================
+# RUNTIMES & DEPENDENCIES
+# ==========================================
+venv/
+.venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# ==========================================
+# FRONTEND BUILD ARTIFACTS
+# ==========================================
+port-lease-mms/node_modules/
+node_modules/
+port-lease-mms/dist/
+dist/
+dist-ssr/
+.output/
+.tanstack/
+.wrangler/
+.kilo/
+.lovable/
+.vinxi/
+.nitro/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# ==========================================
+# SYSTEM & IDE ARTIFACTS
+# ==========================================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+!.vscode/extensions.json

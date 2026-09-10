@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "formula_source_file": "Tax_Formulas_Expanded.md",
+  "defaults": {
+    "category": "general",
+    "target_month": 12,
+    "structure": "other",
+    "frequency": "monthly",
+    "water_tax_included": true
+  },
+  "max_forecast_months": null,
+  "long_horizon_threshold_months": 120,
+  "unscheduled_formula_label": "No scheduled formula tax",
+  "months": [
+    {"value": 1, "label": "January"},
+    {"value": 2, "label": "February"},
+    {"value": 3, "label": "March"},
+    {"value": 4, "label": "April"},
+    {"value": 5, "label": "May"},
+    {"value": 6, "label": "June"},
+    {"value": 7, "label": "July"},
+    {"value": 8, "label": "August"},
+    {"value": 9, "label": "September"},
+    {"value": 10, "label": "October"},
+    {"value": 11, "label": "November"},
+    {"value": 12, "label": "December"}
+  ],
+  "categories": [
+    {
+      "value": "general",
+      "label": "General billing",
+      "model_value": "rent",
+      "charge_ids": [2, 15],
+      "prompt_aliases": ["general", "rent", "billing"]
+    },
+    {
+      "value": "additional_rent",
+      "label": "Additional rent",
+      "model_value": "additional_rent",
+      "charge_ids": [4],
+      "prompt_aliases": ["additional rent", "additional_rent"]
+    }
+  ],
+  "excluded_prompt_terms": ["electricity", "power", "water"],
+  "excluded_prompt_message": "The selected billing rules do not include electricity or water as separate billing categories. Please ask for a general billing forecast.",
+  "frequencies": [
+    {"value": "monthly", "label": "Monthly", "aliases": ["monthly", "month", "1"], "minimum_gap": 0},
+    {"value": "half_yearly", "label": "Half-yearly", "aliases": ["half_yearly", "semi_annual", "semiannual", "6"], "minimum_gap": 6},
+    {"value": "yearly", "label": "Yearly", "aliases": ["yearly", "annual", "annually", "12"], "minimum_gap": 12}
+  ],
+  "structures": [
+    {"value": "other", "label": "Other", "factor": 0.792, "match_terms": ["other", "private structure"]},
+    {"value": "mbpt", "label": "MBPT", "factor": 0.837, "match_terms": ["mbpt", "port trust", "p. t. structure"]}
+  ],
+  "formula": {
+    "months_per_year": 12,
+    "letting_value_divisor": 3,
+    "deduction_rate": 0.9,
+    "nrv_divisor": 10,
+    "half_year_divisor": 2,
+    "tax_split_divisor": 2,
+    "property_tax_structure": "mbpt"
+  },
+  "rates": [
+    {"key": "general", "label": "General", "database_column": "gen_tax", "csv_match": {"tax_names": ["Property Taxes"], "tax_name_shorts": ["Prop.Tax"]}},
+    {"key": "sewerage", "label": "Sewerage", "database_column": "sewr_tax", "csv_match": {"tax_names": []}},
+    {"key": "water", "label": "Water", "database_column": "wtr_tax", "csv_match": {"tax_names": []}},
+    {"key": "street", "label": "Street", "schedule_term": "street", "csv_match": {"tax_names": ["Street Tax"], "tax_name_shorts": ["Street Tax"]}},
+    {"key": "mecess", "label": "MECESS", "schedule_term": "education", "csv_match": {"tax_names": ["Mah. State Edn. Cess"], "tax_name_shorts": ["MECess"]}},
+    {"key": "tree_cess", "label": "Tree cess", "schedule_term": "tree", "csv_match": {"tax_names": ["Tree Cess"], "tax_name_shorts": ["TreeCess"]}},
+    {"key": "wbt", "label": "WBT", "database_column": "wbt", "csv_match": {"tax_names": ["Water Benefit Taxes"], "tax_name_shorts": ["WBT"]}},
+    {"key": "sbt", "label": "SBT", "database_column": "sbt", "csv_match": {"tax_names": ["Sewerage Benefit Taxes"], "tax_name_shorts": ["SBT"]}},
+    {"key": "egcess", "label": "EGCESS", "database_column": "egc", "csv_match": {"tax_names": ["Emp. Guarantee Cess"], "tax_name_shorts": ["EGCess"]}}
+  ],
+  "formula_schedules": [
+    {
+      "key": "pre_taxes",
+      "label": "Pre taxes · April / October",
+      "months": [4, 10],
+      "items": [
+        {"label": "Property tax", "kind": "property_tax", "rate_keys": ["general", "sewerage", "water"]},
+        {"label": "Water benefit tax", "kind": "dual", "rate_key": "wbt"},
+        {"label": "Sewerage benefit tax", "kind": "dual", "rate_key": "sbt"},
+        {"label": "Employee guarantee cess", "kind": "dual", "rate_key": "egcess"},
+        {"label": "Street tax", "kind": "street", "rate_key": "street"}
+      ]
+    },
+    {
+      "key": "post_taxes",
+      "label": "Post taxes · March / September",
+      "months": [3, 9],
+      "items": [
+        {"label": "Maharashtra education cess", "kind": "dual", "rate_key": "mecess"},
+        {"label": "Tree cess", "kind": "dual", "rate_key": "tree_cess"}
+      ]
+    }
+  ]
+}

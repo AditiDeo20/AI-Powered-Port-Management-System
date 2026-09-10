@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Assistant | Port Land Lease MMS</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN with configuration -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              DEFAULT: '#0B2545',
+              light: '#134074',
+              dark: '#001229',
+              muted: '#8DA9C4',
+              foreground: '#FFFFFF'
+            },
+            surface: '#F4F7FA',
+            secondary: '#EEF4F8',
+            border: '#E2E8F0',
+            foreground: '#1E293B',
+            'muted-foreground': '#64748B',
+            gold: {
+              DEFAULT: '#D97706',
+              light: '#FBBF24'
+            },
+            'gov-green': {
+              DEFAULT: '#059669',
+              light: '#10B981'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- jsPDF for downloading response as PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="bg-surface text-foreground font-sans min-h-screen flex flex-col antialiased relative">
+
+  <!-- BACKEND MODEL LOADING OVERLAY -->
+  <div id="loading-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-surface/85 backdrop-blur-md transition-all duration-500">
+    <div class="card-gov bg-white border border-border rounded-2xl p-8 shadow-2xl max-w-md w-11/12 text-center flex flex-col items-center gap-5">
+      
+      <!-- Animated Model Spinner -->
+      <div id="spinner-container" class="relative w-20 h-20 flex items-center justify-center">
+        <div class="absolute inset-0 rounded-full border-4 border-navy/15 border-t-navy border-r-gold animate-spin"></div>
+        <div class="w-12 h-12 rounded-xl bg-navy text-white flex items-center justify-center text-xl shadow-md font-display font-bold">
+          ⚓
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-display text-lg font-bold text-navy" id="loading-title">Initializing RAG AI Pipeline</h3>
+        <p class="text-xs text-muted-foreground mt-1.5 leading-relaxed px-2" id="loading-status">
+          Loading BGE-M3 Embedding Model, PostgreSQL pgvector & Qwen 2.5 LLM...
+        </p>
+      </div>
+
+      <!-- Progress pulse bar -->
+      <div id="progress-bar-container" class="w-full bg-secondary h-1.5 rounded-full overflow-hidden">
+        <div id="loading-progress-bar" class="bg-gradient-to-r from-navy via-navy-light to-gold h-full w-3/4 animate-pulse rounded-full"></div>
+      </div>
+
+      <!-- Retry Action Button (Hidden by default) -->
+      <button id="retry-backend-btn" class="hidden px-5 py-2.5 bg-navy text-white text-xs font-semibold rounded-lg hover:bg-navy-light transition-colors shadow">
+        <i data-lucide="refresh-cw" class="w-3.5 h-3.5 inline mr-1"></i> Retry Backend Connection
+      </button>
+    </div>
+  </div>
+
+  <!-- GOV HEADER -->
+  <header class="bg-navy text-navy-foreground border-b border-navy-light shadow-sm sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <!-- Mobile Sidebar Toggle -->
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-md hover:bg-navy-light text-white focus:outline-none" aria-label="Toggle Navigation">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        <!-- Emblem / Logo -->
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-lg bg-gold/20 border border-gold/40 flex items-center justify-center text-gold font-display font-bold text-lg shadow-inner">
+            ⚓
+          </div>
+          <div>
+            <div class="font-display font-bold text-base tracking-wide flex items-center gap-2">
+              PORT LAND LEASE MMS
+              <span class="text-[10px] bg-gold/20 text-gold-light px-2 py-0.5 rounded font-mono font-medium tracking-normal border border-gold/30">GOVT OF INDIA</span>
+            </div>
+            <div class="text-xs text-navy-muted hidden sm:block">Port Authority Enterprise RAG Portal</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Header Actions -->
+      <div class="flex items-center gap-4">
+        <div class="hidden md:flex items-center gap-3 text-xs text-navy-muted font-medium border-r border-navy-light pr-4">
+          <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-gov-green"></i> RBAC Secured</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="database" class="w-3.5 h-3.5 text-gold"></i> pgvector Master DB</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-gov-green animate-pulse"></span>
+          <span class="text-xs font-medium text-white/90">Master Node</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <main class="mx-auto flex w-full max-w-7xl flex-1 gap-4 px-4 py-6">
+    
+    <!-- SIDEBAR: HISTORY (Desktop & Mobile Drawer) -->
+    <aside id="sidebar-container" class="w-72 shrink-0">
+      <div class="card-gov h-full flex flex-col p-4 bg-white border border-border rounded-xl shadow-card">
+        <!-- Close Mobile Drawer Button -->
+        <div class="flex items-center justify-between mb-2 lg:hidden">
+          <span class="font-display font-semibold text-sm text-navy">Chat Sessions</span>
+          <button id="close-sidebar-btn" class="p-1 text-muted-foreground hover:text-navy">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- New Chat Button -->
+        <button id="new-chat-btn" class="w-full flex items-center justify-center gap-2 rounded-lg bg-navy px-4 py-2.5 text-sm font-semibold text-white shadow hover:bg-navy-light transition-colors">
+          <i data-lucide="message-square-plus" class="w-4 h-4"></i> New Chat
+        </button>
+
+        <div class="mt-5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center justify-between">
+          <span>Conversation History</span>
+          <i data-lucide="history" class="w-3.5 h-3.5"></i>
+        </div>
+
+        <!-- Scrollable History List -->
+        <div class="mt-2 flex-1 overflow-y-auto pr-1 space-y-1" id="history-list">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Uploaded Documents Library Section -->
+        <div class="mt-4 pt-3 border-t border-border/70 flex flex-col max-h-52 shrink-0">
+          <div class="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center justify-between mb-1.5">
+            <span class="flex items-center gap-1.5"><i data-lucide="file-text" class="w-3.5 h-3.5 text-navy"></i> Indexed Documents</span>
+            <button id="refresh-docs-btn" title="Refresh uploaded documents list" class="p-1 hover:bg-secondary rounded text-muted-foreground hover:text-navy transition-colors">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+            </button>
+          </div>
+          <div id="uploaded-docs-list" class="overflow-y-auto space-y-1.5 text-xs pr-1 max-h-36">
+            <div class="p-2 text-center text-muted-foreground italic text-[11px]">Loading documents...</div>
+          </div>
+        </div>
+
+        <div class="mt-auto pt-4 border-t border-border/60 text-xs text-muted-foreground flex items-center justify-between">
+          <span>Port Land Lease System</span>
+          <span class="font-mono text-[10px] bg-secondary px-1.5 py-0.5 rounded">v2.5.0</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay backdrop for mobile sidebar -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden backdrop-blur-sm"></div>
+
+    <!-- CHAT MAIN SECTION -->
+    <section class="flex flex-1 flex-col min-w-0">
+      
+      <!-- Chat Header -->
+      <div class="card-gov flex items-center justify-between px-5 py-3.5 bg-white rounded-xl border border-border shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-navy text-white shadow-sm font-bold">
+            <i data-lucide="bot" class="h-5.5 w-5.5"></i>
+          </div>
+          <div>
+            <div class="font-display text-base font-semibold text-navy flex items-center gap-2">
+              AI Assistant
+              <span class="text-[10px] bg-navy/10 text-navy font-mono px-2 py-0.5 rounded font-normal">Port Land RAG</span>
+            </div>
+            <div class="text-xs text-muted-foreground flex items-center gap-1.5">
+              <span>Hybrid RAG + GraphRAG</span>
+              <span>·</span>
+              <span>Qwen 2.5</span>
+              <span>·</span>
+              <span>pgvector</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span id="header-status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border border-gov-green/30 bg-gov-green/5 text-gov-green">
+            <span class="w-2 h-2 rounded-full bg-gov-green animate-pulse"></span>
+            Online
+          </span>
+        </div>
+      </div>
+
+      <!-- Chat Bubbles Container -->
+      <div id="chat-messages" class="mt-4 flex-1 space-y-4 overflow-y-auto rounded-xl border border-border bg-white p-5 shadow-inner min-h-[420px] max-h-[calc(100vh-320px)]">
+        <!-- Dynamic message bubbles inserted here -->
+      </div>
+
+      <!-- INPUT AREA -->
+      <div class="mt-4 card-gov p-4 bg-white rounded-xl border border-border shadow-sm">
+        
+        <!-- Suggestions Chips -->
+        <div class="mb-3.5 flex flex-wrap items-center gap-2">
+          <div class="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+            <i data-lucide="sparkles" class="h-3.5 w-3.5 text-gold"></i> Suggested:
+          </div>
+          <div id="suggestions-container" class="flex flex-wrap gap-2">
+            <!-- Dynamic suggestion buttons -->
+          </div>
+        </div>
+
+        <!-- Chat Form -->
+        <form id="chat-form" class="flex items-center gap-2">
+          
+          <!-- Attachment Button -->
+          <input type="file" id="file-upload-input" class="hidden" accept=".pdf,.doc,.docx,.txt" />
+          <button type="button" id="attach-btn" title="Attach Document PDF/Text for RAG Indexing" class="h-11 w-11 shrink-0 rounded-lg border border-border bg-white hover:bg-secondary text-navy-dark flex items-center justify-center transition-colors focus:ring-2 focus:ring-navy/20">
+            <i data-lucide="paperclip" class="h-4.5 w-4.5"></i>
+          </button>
+
+          <!-- Voice Mic Input Button -->
+          <button type="button" id="mic-btn" title="Voice Input (Click to speak)" class="h-11 w-11 shrink-0 rounded-lg border border-border bg-white hover:bg-secondary text-navy-dark flex items-center justify-center transition-colors focus:ring-2 focus:ring-navy/20 relative">
+            <i data-lucide="mic" class="h-4.5 w-4.5"></i>
+            <span id="mic-pulse" class="hidden absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
+          </button>
+          
+          <!-- Context Dropdown -->
+          <div class="relative shrink-0">
+            <select id="context-select" class="h-11 w-[160px] shrink-0 rounded-lg border border-border bg-background px-3 text-xs font-medium text-foreground focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20 cursor-pointer">
+              <option value="Board Note">Board Note</option>
+              <option value="Breach">Breach</option>
+              <option value="Chairman Note">Chairman Note</option>
+              <option value="Letter">Letter</option>
+              <option value="RTI">RTI</option>
+              <option value="SOR">SOR</option>
+              <option value="Suit">Suit</option>
+              <option value="Tender Draft">Tender Draft</option>
+            </select>
+          </div>
+
+          <!-- Prompt Text Input -->
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Ask about leases, policies, tenants or land records..."
+            class="flex-1 h-11 rounded-lg border border-border bg-background px-4 text-sm focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20"
+            autocomplete="off"
+          />
+
+          <!-- Send Button -->
+          <button type="submit" id="send-btn" class="h-11 shrink-0 rounded-lg bg-navy px-5 text-sm font-semibold text-white hover:bg-navy-light transition-colors shadow flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-navy/30">
+            <i data-lucide="send" class="h-4 w-4"></i> Send
+          </button>
+        </form>
+
+        <div class="mt-2.5 flex items-center justify-between text-[11px] text-muted-foreground">
+          <span>Responses include source document, page number, and confidence score.</span>
+          <span id="upload-status" class="text-gov-green font-medium"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- GOV FOOTER -->
+  <footer class="bg-white border-t border-border py-4 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground gap-2">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-navy font-display">Port Land Lease MMS</span>
+        <span>© 2026 Port Authority of India. All rights reserved.</span>
+      </div>
+      <div class="flex items-center gap-4 text-navy font-medium">
+        <a href="#" class="hover:underline">Land Lease Policy</a>
+        <a href="#" class="hover:underline">RTI Portal</a>
+        <a href="#" class="hover:underline">Support & Help</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

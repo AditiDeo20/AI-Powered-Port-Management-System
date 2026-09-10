@@ -1,0 +1,81 @@
+{
+  "version": 2,
+  "source_files": {
+    "procedure": "Procedure for Publishing Tender.md",
+    "plot_master": "plot_202608082105.csv",
+    "vacant_plot_master": "vacant_plot_data_202602_202608082120.csv",
+    "tender_plot_master": "tender_exports/tender_plot_master.csv",
+    "embarkation_checklist": "CHECK LIST FOR LAC MEETINGS - EMBARKATION HQ+STC.md",
+    "stp_checklist": "CHECK LIST FOR LAC MEETINGS - STP (2).md",
+    "board_note_template": "Board Note_RBI_Embarkation_02052026 (4).docx",
+    "tender_template": "EM042026RFP R102072026.docx",
+    "calculation_workbook": "UPFRONT U-05- Sewree Timber Pond )STP) 20.04.2026.xlsx",
+    "upfront_calculation_reference": "UPFRONT U-05- Sewree Timber Pond )STP) 20.04.2026.xlsx",
+    "npv_calculation_reference": "RBI Embarkation upfront 60 years.pdf"
+  },
+  "plot_source": {
+    "source_key": "tender_plot_master",
+    "id_field": "source_plot_id",
+    "eligibility_field": "is_vacant",
+    "eligible_values": ["true"],
+    "display_fields": ["plot_code", "rr_no", "main_structure_name", "location"],
+    "prefill_fields": {"area_sqm": "plot_area_sqm"},
+    "snapshot_fields": [
+      "source_plot_id", "plot_code", "rr_no", "street_no", "main_structure_name", "location",
+      "city_survey_no", "city_survey_div", "plot_area_sqm", "plot_status", "plot_active", "is_vacant",
+      "owner", "owner_name", "dept_name", "estate_id", "div_id", "plot_unit_id", "ward_id", "zone_id",
+      "zone_detail_id", "reservation", "rrzone2017", "mbpt_road_connectivity", "schedule_east", "schedule_west",
+      "schedule_north", "schedule_south", "plot_remarks", "let_out_id", "let_out_name", "letout_status",
+      "tenancy_area_sqm", "tenancy_consumed_fsi", "recorded_planning_fsi", "recorded_sor_market_value"
+    ]
+  },
+  "checklists": [
+    {"key": "embarkation", "label": "Embarkation / STC LAC checklist", "source_key": "embarkation_checklist"},
+    {"key": "stp", "label": "STP LAC checklist", "source_key": "stp_checklist"}
+  ],
+  "form_fields": [
+    {"key": "area_sqm", "label": "Area (sq. m)", "type": "number", "step": "0.01", "source_field": "area", "required_for": ["calculate"], "source_note": "Prefilled from the selected vacant-plot record when available; verify by joint survey."},
+    {"key": "proposed_use", "label": "Proposed use", "type": "text", "required_for": ["submit_lac", "generate_board_note", "generate_tender"], "source_note": "Enter the use approved for this proposal."},
+    {"key": "tender_method", "label": "Tender method", "type": "text", "required_for": ["submit_lac", "generate_tender"], "source_note": "Enter only the tender method approved for this case."},
+    {"key": "lease_years", "label": "Lease period (years)", "type": "number", "step": "1", "required_for": ["calculate", "generate_tender"], "source_note": "Enter the lease period approved for this proposal."},
+    {"key": "fsi", "label": "Approved FSI", "type": "number", "step": "0.01", "required_for": ["calculate"], "source_note": "Enter the approved FSI; it is not inferred from the CSV."},
+    {"key": "approved_monthly_sor_rate", "label": "Approved monthly SoR / reserve rate (INR per sq. m)", "type": "number", "step": "0.01", "required_for": ["calculate"], "source_note": "Required from the approved SoR/LAC record for this proposal; it is not inferred from historic source rows."},
+    {"key": "annual_escalation_percent", "label": "Annual escalation (%)", "type": "number", "step": "0.01", "required_for": ["calculate"], "source_note": "Enter the escalation percentage approved for this proposal."},
+    {"key": "discount_rate_percent", "label": "Discount / G-Sec rate (%)", "type": "number", "step": "0.01", "required_for": ["calculate"], "source_note": "Enter the approved rate effective for the proposal date."},
+    {"key": "gst_percent", "label": "GST (%)", "type": "number", "step": "0.01", "required_for": ["calculate"], "source_note": "Enter the applicable approved GST rate."},
+    {"key": "service_charge_per_sqm_year", "label": "Service charge (INR per sq. m per year)", "type": "number", "step": "0.01", "required_for": [], "source_note": "Optional; enter only when applicable and approved."},
+    {"key": "nominal_rent_per_sqm_year", "label": "Nominal rent (INR per sq. m per year)", "type": "number", "step": "0.01", "required_for": [], "source_note": "Optional; enter only when applicable and approved."}
+  ],
+  "workflow": {
+    "initial_status": "LAC_DRAFT",
+    "statuses": [
+      {"key": "LAC_DRAFT", "label": "LAC draft"},
+      {"key": "LAC_SUBMITTED", "label": "LAC submitted for approval"},
+      {"key": "LAC_APPROVED", "label": "LAC approved"},
+      {"key": "BOARD_NOTE_DRAFT", "label": "Board Note draft"},
+      {"key": "BOARD_NOTE_SUBMITTED", "label": "Board Note submitted for approval"},
+      {"key": "BOARD_NOTE_APPROVED", "label": "Board Note approved"},
+      {"key": "CALCULATION_FINALIZED", "label": "Calculation finalized"},
+      {"key": "TENDER_DRAFT", "label": "Tender / RFP draft"},
+      {"key": "NIT_SUBMITTED", "label": "NIT submitted for approval"},
+      {"key": "NIT_APPROVED", "label": "NIT approved"},
+      {"key": "PUBLISHED", "label": "Tender published"}
+    ],
+    "actions": [
+      {"key": "save_draft", "label": "Save LAC draft", "from": ["LAC_DRAFT"], "to": "LAC_DRAFT", "requires": []},
+      {"key": "submit_lac", "label": "Submit LAC for approval", "from": ["LAC_DRAFT"], "to": "LAC_SUBMITTED", "requires": ["lac_complete"]},
+      {"key": "approve_lac", "label": "Record LAC approval", "from": ["LAC_SUBMITTED"], "to": "LAC_APPROVED", "requires": []},
+      {"key": "return_lac", "label": "Return LAC for clarification", "from": ["LAC_SUBMITTED"], "to": "LAC_DRAFT", "requires": ["comment"]},
+      {"key": "generate_board_note", "label": "Generate Board Note draft", "from": ["LAC_APPROVED"], "to": "BOARD_NOTE_DRAFT", "requires": ["proposal_fields"]},
+      {"key": "submit_board_note", "label": "Submit Board Note for approval", "from": ["BOARD_NOTE_DRAFT"], "to": "BOARD_NOTE_SUBMITTED", "requires": []},
+      {"key": "approve_board_note", "label": "Record Board Note approval", "from": ["BOARD_NOTE_SUBMITTED"], "to": "BOARD_NOTE_APPROVED", "requires": []},
+      {"key": "return_board_note", "label": "Return Board Note for modification", "from": ["BOARD_NOTE_SUBMITTED"], "to": "BOARD_NOTE_DRAFT", "requires": ["comment"]},
+      {"key": "finalize_calculation", "label": "Finalize calculation", "from": ["BOARD_NOTE_APPROVED"], "to": "CALCULATION_FINALIZED", "requires": ["calculation"]},
+      {"key": "generate_tender", "label": "Generate Tender / RFP draft", "from": ["CALCULATION_FINALIZED"], "to": "TENDER_DRAFT", "requires": ["proposal_fields", "calculation"]},
+      {"key": "submit_nit", "label": "Submit NIT for approval", "from": ["TENDER_DRAFT"], "to": "NIT_SUBMITTED", "requires": []},
+      {"key": "approve_nit", "label": "Record NIT approval", "from": ["NIT_SUBMITTED"], "to": "NIT_APPROVED", "requires": []},
+      {"key": "return_nit", "label": "Return NIT for modification", "from": ["NIT_SUBMITTED"], "to": "TENDER_DRAFT", "requires": ["comment"]},
+      {"key": "publish", "label": "Publish tender", "from": ["NIT_APPROVED"], "to": "PUBLISHED", "requires": ["calculation"]}
+    ]
+  }
+}

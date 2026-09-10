@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "schema": "public",
+  "sql_file": "sql/tender_workflow/tender_source_export.sql",
+  "output_directory": "data2/tender_exports",
+  "exports": [
+    {"name": "tender_plot_master", "filename": "tender_plot_master.csv", "purpose": "One current, source-backed context row per database-vacant plot; used by the tender workflow dropdown and safe plot-context prefill."},
+    {"name": "tender_plot_area_history", "filename": "tender_plot_area_history.csv", "purpose": "All plot/let-out area and consumed-FSI records for evidence review."},
+    {"name": "tender_tenancy_reference", "filename": "tender_tenancy_reference.csv", "purpose": "Historic and active tenancy, existing approval-date, rent, lease, and security-deposit references."},
+    {"name": "tender_application_reference", "filename": "tender_application_reference.csv", "purpose": "Application-property records connected to the exported vacant-plot tenancy references."},
+    {"name": "tender_rate_reference", "filename": "tender_rate_reference.csv", "purpose": "Raw public-schema zone, service-charge, and interest-rate records. These are references only, not automatic tender approvals."},
+    {"name": "tender_source_coverage", "filename": "tender_source_coverage.csv", "purpose": "Counts that expose which tender inputs are actually available in the public database."}
+  ]
+}

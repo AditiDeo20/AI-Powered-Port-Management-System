@@ -1,0 +1,39 @@
+Project/
+│
+├── app/
+│   └── services/
+│
+├── data/
+├── Docs/
+├── models/
+│
+├── scripts/
+│   │
+│   ├── rag_system_embedding.py      ← Production Ingestion Pipeline
+│   ├── rag_system_chatbot.py        ← Production Chatbot
+│   ├── curate_documents.py
+│   ├── ingest_all_pdfs.py
+│   ├── inspect_document.py
+│   │
+│   └── tests/
+│       ├── test_renderer.py
+│       ├── test_ocr.py
+│       ├── test_paddle_ocr.py
+│       ├── test_parser.py
+│       ├── test_document_builder.py
+│       ├── test_metadata_extractor.py
+│       ├── test_chunk_service.py
+│       ├── test_chunk_validator.py
+│       ├── test_embedding.py
+│       ├── test_embedding_pipeline.py
+│       ├── test_postgres.py
+│       ├── test_postgres_service.py
+│       ├── test_prompt_builder.py
+│       ├── test_retrieval.py
+│       ├── test_llm.py
+│       ├── test_preprocessor.py
+│       └── test_save_document.py
+│
+├── .env
+├── requirements.txt
+└── README.md

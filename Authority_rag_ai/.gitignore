@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+.venv/
+
+# Environment Variables
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Model Files
+models/
+
+# Logs
+*.log
+
+# Database (if using local SQLite later)
+*.db
+
+#Data Confidential
+/data
