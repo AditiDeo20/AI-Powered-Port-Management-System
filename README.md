@@ -1,4 +1,4 @@
-﻿# AI-Powered Port Estate & Land Management System (AI-PMS)
+# AI-Powered Port Estate & Land Management System (AI-PMS)
 
 <div align="center">
 
@@ -182,6 +182,22 @@ Policy amendments across decades are structured in a Neo4j labeled property grap
 ├── .gitignore                      # Bulletproof confidential data filter
 └── README.md                       # Comprehensive platform documentation
 ```
+
+---
+
+## 👥 Project Leadership & Core Technical Ownership
+
+This platform was engineered as a capstone live project at **CDAC Mumbai** by a 6-member engineering team.
+
+* **Lead AI & Systems Architect:** [Aditi Vikas Deo](https://github.com/AditiDeo20)
+* **Team Composition:** 6-Member Engineering Team
+* **Project Scope:** Enterprise Port Estate & Land Management System (AI-PMS)
+
+### Key Architectural Ownership & Direct Contributions
+- **Deterministic 3-Tier Governance Workflow:** Designed and coded the complete DO -> NO -> HOD state machine (`backend/agenda_workflow.py`), optimistic concurrency control locks (`editing_version`), Context Capsule serialization, and automated HOD approval memorandum synthesis.
+- **Parent-Child Hybrid RAG Architecture:** Engineered the two-hop retrieval engine combining PostgreSQL 17 relational lookups with `pgvector` HNSW dense semantic search (1024-dim BGE-M3), PostgreSQL `tsvector` full-text search, and dynamic DDL schema vector injection across 579 legacy database tables.
+- **Enterprise Security & Guardrail Interception:** Implemented pre-retrieval deterministic regex guardrails blocking destructive SQL commands, domain-scope filters preventing hallucination on out-of-domain requests, and tenant row-level data isolation shields.
+- **Offline ML Billing Engine & Tree Evaluator:** Embedded an XGBoost regression model evaluated via a custom pure-Python recursive tree parser (`XgbJsonModel`) to enable sub-millisecond inference with zero external C++ library dependencies in air-gapped environments.
 
 ---
 
